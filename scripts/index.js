@@ -8,12 +8,14 @@
 
 const gameContainer = document.getElementById('game-container');
 const elements = [];
+const hitboxRange = 50;
+
 let score = 0;
 let intervalId;
 let totalRows = 0;
 let speed = 2;
 let intervalTime = 500;
-const hitboxRange = 50;
+let keyPressed = false;
 
 // ------ FUNCTIONS ------ //
 
@@ -78,14 +80,12 @@ function updateInterval() {
     intervalId = setInterval(createRandomElement, intervalTime);
 }
 
-let keyPressed = false;
+// ------ LISTENERS ------ //
 
 document.addEventListener('keydown', (event) => {
     if (keyPressed) return;
     keyPressed = true;
 });
-
-// ------ LISTENERS ------ //
 
 document.addEventListener('keydown', (event) => {
     const keyMap = {
@@ -116,6 +116,11 @@ document.addEventListener('keydown', (event) => {
         });
     }
 });
+
+const controlsContainer = document.getElementById('controls');
+const instruction = document.createElement('p');
+instruction.textContent = 'Press the keys when the elements touch the character!';
+controlsContainer.appendChild(instruction);
 
 // ------ CODE PRINCIPAL ------ //
 
