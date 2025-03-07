@@ -12,7 +12,7 @@ let score = 0;
 let intervalId;
 let totalRows = 0;
 let speed = 2;
-let intervalTime = 1000;
+let intervalTime = 500;
 const hitboxRange = 50;
 
 // ------ FUNCTIONS ------ //
@@ -25,7 +25,7 @@ function createRandomElement() {
 
         const element = document.createElement('div');
         element.classList.add('element');
-        element.style.left = `45%`;
+        element.style.left = `40%`;
         element.style.top = `${rowIndex * 25 - totalRows * 20}px`;
         element.style.visibility = isVisible ? 'visible' : 'hidden';
         element.speed = speed;
@@ -66,11 +66,15 @@ function moveElements() {
 function gameLoop() {
     moveElements();
     requestAnimationFrame(gameLoop);
+    console.log('score : ' + score);
+    console.log('score : ' + score);
+    console.log('speed : ' + speed);
+    console.log('intervale : ' + intervalTime);
 }
 
 function updateInterval() {
     clearInterval(intervalId);
-    intervalTime = Math.max(100, 500 - score * 2);
+    intervalTime = Math.max(250, 500 - score * 2);
     intervalId = setInterval(createRandomElement, intervalTime);
 }
 
@@ -91,7 +95,7 @@ document.addEventListener('keydown', (event) => {
         'r': 3
     };
 
-    const colIndex = keyMap[event.key];
+    const colIndex = keyMap[event.key.toLowerCase()];
     if (colIndex !== undefined) {
         elements.forEach((element, index) => {
             const top = parseFloat(element.style.top);
@@ -103,9 +107,9 @@ document.addEventListener('keydown', (event) => {
                 score++;
                 element.parentElement.removeChild(element);
                 elements.splice(index, 1);
-                speed += 0.01;
+                speed += 0.05;
                 elements.forEach(el => el.speed += 0.05);
-                updateInterval(); // Update interval when score changes
+                updateInterval();
             } else if (element.colIndex === colIndex) {
                 element.style.backgroundColor = 'red';
             }
