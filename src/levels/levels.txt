@@ -1,0 +1,11 @@
+# Niveau 1
+interval: 1000
+speed: 2
+
+# Niveau 2
+interval: 800
+speed: 3
+
+# Niveau 3
+interval: 600
+speed: 4
