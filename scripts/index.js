@@ -2,43 +2,31 @@ const gameContainer = document.getElementById('game-container');
 const line = document.getElementById('line');
 const elements = [];
 let score = 0;
-let levelData = [];
-let currentLevel = 0;
+let currentLevel = 1;
 let intervalId;
 
-function loadLevels() {
-    fetch('/src/levels/levels.txt')
+function loadLevel(level) {
+    fetch(`/src/levels/level${level}.txt`)
         .then(response => response.text())
         .then(text => {
-            const levels = text.split('\n\n');
-            levels.forEach(level => {
-                const lines = level.split('\n');
-                const levelInfo = {};
-                lines.forEach(line => {
-                    if (line && !line.startsWith('#')) {
-                        const [key, value] = line.split(': ');
-                        levelInfo[key] = parseInt(value);
+            const rows = text.trim().split('\n');
+            rows.forEach((row, rowIndex) => {
+                const columns = row.split(' ');
+                columns.forEach((col, colIndex) => {
+                    if (col === '1') {
+                        createElement(colIndex, rowIndex);
                     }
                 });
-                levelData.push(levelInfo);
             });
-            startLevel(currentLevel);
         });
 }
 
-function startLevel(level) {
-    const { interval, speed } = levelData[level];
-    clearInterval(intervalId);
-    intervalId = setInterval(createRandomElement, interval);
-    elements.forEach(element => element.speed = speed);
-}
-
-function createRandomElement() {
+function createElement(colIndex, rowIndex) {
     const element = document.createElement('div');
     element.classList.add('element');
-    element.style.left = `${Math.random() * (gameContainer.clientWidth - 50)}px`;
-    element.style.top = '0px';
-    element.speed = levelData[currentLevel].speed;
+    element.style.left = `${colIndex * 25}%`;
+    element.style.top = `${rowIndex * 25}px`;
+    element.speed = 2;
     gameContainer.appendChild(element);
     elements.push(element);
 }
@@ -78,5 +66,5 @@ document.addEventListener('keydown', (event) => {
     });
 });
 
-loadLevels();
+loadLevel(currentLevel);
 requestAnimationFrame(gameLoop);
