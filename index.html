@@ -1,37 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rhythm Heresy</title>
-    <link rel="stylesheet" href="/styles/index.css">
-    <link id="favicon" rel="icon" type="image/png" href="">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Rhythm Heresy</title>
+        <link rel="stylesheet" href="/styles/index.css">
+        <link id="favicon" rel="icon" type="image/png" href="">
+    </head>
 <body>
     <header>
         <h1 id="title"></h1>
         <div id="menu-burger"></div>
     </header>
     <main>
-        <div id="game-container">
-            <div class="column" id="column-0">
-                <div class="validation-zone" data-key="a">A</div>
-            </div>
-            <div class="column" id="column-1">
-                <div class="validation-zone" data-key="z">Z</div>
-            </div>
-            <div class="column" id="column-2">
-                <div class="validation-zone" data-key="e">E</div>
-            </div>
-            <div class="column" id="column-3">
-                <div class="validation-zone" data-key="r">R</div>
-            </div>
+        <div>
+            <section id="game-rules">
+                <h2>Règles du Jeu</h2>
+                <p>Bienvenue dans Rhythm Heresy! Voici comment jouer:</p>
+                <ul>
+                <li>Appuyez sur les touches en rythme avec la musique.</li>
+                <li>Chaque touche correcte vous rapporte des points.</li>
+                <li>Manquer une touche vous fait perdre des points.</li>
+                <li>Le jeu se termine lorsque la chanson est terminée ou que vous avez perdu tous vos points.</li>
+                </ul>
+            </section>
+            <section id="scoring-system">
+                <h2>Système de Scoring</h2>
+                <p>Le système de scoring est simple:</p>
+                <ul>
+                <li>+1 points pour chaque touche correcte.</li>
+                <li>-2 points pour chaque touche manquée.</li>
+                <li>Un combo de touches correctes augmente votre score plus rapidement.</li>
+                </ul>
+            </section>
+            <section id="win-conditions">
+                <h2>Conditions de Défaite</h2>
+                <p>Vous perdez si:</p>
+                <ul>
+                <li>Votre score tombe à zéro.</li>
+                <li>Vous manquez 5 touches consécutivement.</li>
+                </ul>
+            </section>
         </div>
-        <div id="controls"></div>
+        <div id="play-button"></div>
     </main>
-    <footer>
-
-    </footer>
+    <footer></footer>
     <script src="/scripts/index.js"></script>
 </body>
 </html>

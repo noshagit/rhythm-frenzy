@@ -13,65 +13,56 @@ header #title {
     color: rgba(88, 36, 33, 0.863);
 }
 
-main {
-    margin: 0;
+#play-button {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 90vh;
-    background-color: rgba(40, 44, 52, 1);
-    color: white;
-    font-family: Arial, sans-serif;
-}
-
-#game-container {
-    display: flex;
-    width: 20%;
-    height: 80%;
-    border: 2px solid white;
-    background-color: rgba(40, 44, 52, 1);
-    overflow: hidden;
-}
-
-.column {
-    flex: 1;
-    position: relative;
-    border-left: 1px solid white;
-    background: linear-gradient(to bottom, transparent 40%, white 100%);
-    background-size: 1px 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.column:first-child {
-    border-left: none;
-}
-
-.validation-zone {
-    position: absolute;
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-    background-color: white;
-    color: black;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.element {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background-image: none;
-    border-radius: 90px;
-}
-
-#controls {
     margin-top: 20px;
+}
+
+#play-button a {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1.5em;
+    font-family: 'Arial', sans-serif;
+    text-decoration: none;
+    color: white;
+    background-color: rgba(88, 36, 33, 0.863);
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#play-button a:hover {
+    background-color: rgba(88, 36, 33, 1);
+}
+
+#game-rules, #scoring-system, #win-conditions {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    background-color: rgba(30, 34, 40, 1);
+    border-radius: 10px;
+    color: white;
+    font-family: 'Arial', sans-serif;
     text-align: center;
+}
+
+#game-rules, #scoring-system, #win-conditions h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+#game-rules , #scoring-system, #win-conditions p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+#game-rules , #scoring-system, #win-conditions ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+#game-rules , #scoring-system, #win-conditions li {
+    margin-bottom: 5px;
+    font-size: 1.2em;
 }
