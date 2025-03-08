@@ -8,8 +8,20 @@
 
 const gameContainer = document.getElementById('game-container');
 const elements = [];
+const backgroundMusic = new Audio();
+const stopButton = document.createElement("button");
+const audioContainer = document.createElement("div");
+const playPauseButton = document.createElement("button");
+const nextButton = document.createElement("button");
+const prevButton = document.createElement("button");
+const timeDisplay = document.createElement("div");
 const hitboxRange = 50;
-const music = new Audio('/src/audio/background.mp3');
+const border = new Audio('/src/audio/Borders.mp3');
+const homeButtonDiv = document.createElement("div");
+const homeLink = document.createElement("a");
+const controlsContainer = document.getElementById('controls');
+const instruction = document.createElement('p');
+const scoreDisplay = document.getElementById('score-display');
 
 const sounds = {
     hit: new Audio('/src/audio/BloodSound.mp3'),
@@ -23,6 +35,8 @@ const columnLogos = [
     "/src/img/Eldar.png"
 ];
 
+let audioFiles = [];
+let currentFileIndex = 0;
 let score = 0;
 let intervalId;
 let totalRows = 0;
@@ -30,23 +44,112 @@ let speed = 2;
 let intervalTime = 500;
 let keyPressed = false;
 let missCount = 0;
+let consecutiveMisses = 0;
 
+// ------ AUDIO ------ //
 
-
-// ------ FONCTIONS ------ //
+sounds['hit'].volume = 0.3;
+sounds['miss'].volume = 0.1;
+border.volume = 0.2;
 
 function playSound(sound) {
     if (sounds[sound]) {
         sounds[sound].currentTime = 0;
-        if (sound === 'hit') {
-            sounds[sound].volume = 0.3;
-        }
-        if (sound === 'miss') {
-            sounds[sound].volume = 0.1;
-        }
         sounds[sound].play();
     }
 }
+
+function playBorders(){
+    border.currentTime = 0;
+    border.play();
+}
+
+backgroundMusic.volume = 0.05;
+
+audioContainer.id = "audio-container";
+document.body.appendChild(audioContainer);
+
+playPauseButton.innerHTML = "⏸️";
+playPauseButton.onclick = function() {
+    if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        playPauseButton.innerHTML = "⏸️";
+    } else {
+        backgroundMusic.pause();
+        playPauseButton.innerHTML = "▶️";
+    }
+};
+audioContainer.appendChild(playPauseButton);
+
+stopButton.innerHTML = "⏹️";
+stopButton.onclick = function() {
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
+    playPauseButton.innerHTML = "▶️";
+};
+audioContainer.appendChild(stopButton);
+
+
+async function loadAudioFiles() {
+    try {
+        const response = await fetch('/src/songs/songsList.txt');
+        const text = await response.text();
+        audioFiles = text.split('\n').map(file => file.trim()).filter(file => file !== '');
+
+        if (audioFiles.length > 0) {
+            backgroundMusic.src = audioFiles[currentFileIndex];
+        } else {
+            console.error("No audio files found in the text file.");
+        }
+
+        backgroundMusic.addEventListener('ended', function() {
+            currentFileIndex = (currentFileIndex + 1) % audioFiles.length;
+            if (currentFileIndex === 0) {
+                console.log("Fin de la playlist, on recommence !");
+            }
+            backgroundMusic.src = audioFiles[currentFileIndex];
+            backgroundMusic.play();
+        });
+
+    } catch (error) {
+        console.error("Error loading audio file: ", error);
+    }
+}
+
+nextButton.innerHTML = "Next ⏭️";
+nextButton.onclick = function() {
+    currentFileIndex = (currentFileIndex + 1) % audioFiles.length;
+    backgroundMusic.src = audioFiles[currentFileIndex];
+    backgroundMusic.play();
+    playPauseButton.innerHTML = "⏸️";
+};
+audioContainer.appendChild(nextButton);
+
+prevButton.innerHTML = "Previous ⏮️";
+prevButton.onclick = function() {
+    currentFileIndex = (currentFileIndex - 1 + audioFiles.length) % audioFiles.length;
+    backgroundMusic.src = audioFiles[currentFileIndex];
+    backgroundMusic.play();
+    playPauseButton.innerHTML = "⏸️";
+};
+audioContainer.appendChild(prevButton);
+
+timeDisplay.id = "time-display";
+audioContainer.appendChild(timeDisplay);
+
+backgroundMusic.addEventListener('timeupdate', () => {
+    const currentTime = formatTime(backgroundMusic.currentTime);
+    const duration = formatTime(backgroundMusic.duration);
+    timeDisplay.textContent = `${currentTime} / ${duration}`;
+});
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
+// ------ FONCTIONS ------ //
 
 function createRandomElement() {
     const createElement = () => {
@@ -112,6 +215,12 @@ function moveElements() {
         if (top + 50 >= gameContainer.clientHeight) {
             element.parentElement.removeChild(element);
             elements.splice(index, 1);
+            consecutiveMisses++;
+            playBorders();
+            if (consecutiveMisses >= 5) {
+                alert('You lost! Restarting the game.');
+                location.reload();
+            }
         }
         setTimeout(() => {
             keyPressed = false;
@@ -141,10 +250,12 @@ function updateFavicon() {
     favicon.href = isDarkMode ? "/src/img/WhiteLogo.png" : "/src/img/BlackLogo.png";
 }
 
+function updateScoreDisplay() {
+    scoreDisplay.textContent = `Score: ${score}`;
+}
+
 // ------ LISTENERS ------ //
 
-const homeButtonDiv = document.createElement("div");
-const homeLink = document.createElement("a");
 homeButtonDiv.id = "title";
 homeLink.href = "index.html";
 homeLink.textContent = "Rythm Heresy";
@@ -221,13 +332,12 @@ document.addEventListener('keydown', (event) => {
             playSound('miss');
         } else {
             missCount = 0;
+            consecutiveMisses = 0;
             playSound('hit');
         }
     }
 });
 
-const controlsContainer = document.getElementById('controls');
-const instruction = document.createElement('p');
 
 instruction.textContent = 'Press the keys when the elements touch the character!';
 controlsContainer.appendChild(instruction);
@@ -235,8 +345,12 @@ controlsContainer.appendChild(instruction);
 document.getElementById("favicon").href = "/src/img/WhiteLogo.png";
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
 
+setInterval(updateScoreDisplay, 100);
+
 // ------ CODE PRINCIPAL ------ //
 
+loadAudioFiles();
+backgroundMusic.play();
 updateFavicon();
 intervalId = setInterval(createRandomElement, intervalTime);
 requestAnimationFrame(gameLoop);
