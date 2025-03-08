@@ -10,12 +10,20 @@ const gameContainer = document.getElementById('game-container');
 const elements = [];
 const hitboxRange = 50;
 
+const columnLogos = [
+    "/src/img/Chaos.png",
+    "/src/img/Orks.png",
+    "/src/img/Tyrannid.png",
+    "/src/img/Eldar.png"
+];
+
 let score = 0;
 let intervalId;
 let totalRows = 0;
 let speed = 2;
 let intervalTime = 500;
 let keyPressed = false;
+let missCount = 0;
 
 // ------ FUNCTIONS ------ //
 
@@ -27,9 +35,34 @@ function createRandomElement() {
 
         const element = document.createElement('div');
         element.classList.add('element');
-        element.style.left = `40%`;
+        element.style.left = `35%`;
         element.style.top = `${rowIndex * 25 - totalRows * 20}px`;
         element.style.visibility = isVisible ? 'visible' : 'hidden';
+        switch (colIndex) {
+            case 0:
+                element.style.backgroundColor = 'rgba(121, 103, 64, 0.5)';
+            break;
+            case 1:
+                element.style.backgroundColor = 'rgba(73, 112, 83, 0.5)';
+            break;
+            case 2:
+                element.style.backgroundColor = 'rgba(133, 83, 130, 0.5)';
+            break;
+            case 3:
+                element.style.backgroundColor = 'rgba(70, 122, 122, 0.5)';
+            break;
+        }
+        element.style.backgroundImage = `url(${columnLogos[colIndex]})`;
+        element.style.backgroundSize = "cover";
+        switch (colIndex) {
+            case 1:
+                element.style.backgroundSize = "80%";
+            break;
+            case 3:
+                element.style.backgroundSize = "70%";
+            break;
+        }
+        element.style.backgroundPosition = "center";
         element.speed = speed;
         element.colIndex = colIndex;
         document.getElementById(`column-${colIndex}`).appendChild(element);
@@ -80,12 +113,19 @@ function updateInterval() {
     intervalId = setInterval(createRandomElement, intervalTime);
 }
 
+function updateFavicon() {
+    const favicon = document.getElementById("favicon");
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    favicon.href = isDarkMode ? "/src/img/WhiteLogo.png" : "/src/img/BlackLogo.png";
+}
+
 // ------ LISTENERS ------ //
 
 document.addEventListener('keydown', (event) => {
     if (keyPressed) return;
     keyPressed = true;
-});
+})
 
 document.addEventListener('keydown', (event) => {
     const keyMap = {
@@ -97,6 +137,10 @@ document.addEventListener('keydown', (event) => {
 
     const colIndex = keyMap[event.key.toLowerCase()];
     if (colIndex !== undefined) {
+        let hit = false;
+        let closestElement = null;
+        let closestDistance = Infinity;
+
         elements.forEach((element, index) => {
             const top = parseFloat(element.style.top);
             const validationZone = document.querySelector(`#column-${element.colIndex} .validation-zone`);
@@ -110,10 +154,30 @@ document.addEventListener('keydown', (event) => {
                 speed += 0.05;
                 elements.forEach(el => el.speed += 0.05);
                 updateInterval();
+                hit = true;
             } else if (element.colIndex === colIndex) {
-                element.style.backgroundColor = 'red';
+                const distance = Math.abs(top + 50 - validationZoneTop);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestElement = element;
+                }
             }
         });
+
+        if (!hit) {
+            missCount++;
+            score = Math.max(0, score - 2);
+            if (closestElement) {
+                closestElement.parentElement.removeChild(closestElement);
+                elements.splice(elements.indexOf(closestElement), 1);
+            }
+            if (missCount >= 5) {
+                alert('You lost! Restarting the game.');
+                location.reload();
+            }
+        } else {
+            missCount = 0;
+        }
     }
 });
 
@@ -122,7 +186,12 @@ const instruction = document.createElement('p');
 instruction.textContent = 'Press the keys when the elements touch the character!';
 controlsContainer.appendChild(instruction);
 
+document.getElementById("favicon").href = "/src/img/WhiteLogo.png";
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+document.getElementById('title').textContent = 'Rythm Heresy';
+
 // ------ CODE PRINCIPAL ------ //
 
+updateFavicon();
 intervalId = setInterval(createRandomElement, intervalTime);
 requestAnimationFrame(gameLoop);
