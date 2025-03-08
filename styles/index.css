@@ -38,6 +38,10 @@ main {
     flex: 1;
     position: relative;
     border-left: 1px solid white;
+    background: linear-gradient(to bottom, transparent 20%, white 100%);
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .column:first-child {
