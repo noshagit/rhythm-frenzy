@@ -164,8 +164,22 @@ document.addEventListener('keydown', (event) => {
         'r': 3
     };
 
+    const screamSounds = [
+        new Audio('/src/audio/Scream1.mp3'),
+        new Audio('/src/audio/Scream2.mp3'),
+        new Audio('/src/audio/Scream3.mp3'),
+        new Audio('/src/audio/Scream4.mp3')
+    ];
+
+    screamSounds.forEach(sound => {
+        sound.volume = 0.05;
+    });
+
     const colIndex = keyMap[event.key.toLowerCase()];
     if (colIndex !== undefined) {
+        screamSounds[colIndex].currentTime = 0;
+        screamSounds[colIndex].play();
+
         let hit = false;
         let closestElement = null;
         let closestDistance = Infinity;
@@ -214,6 +228,7 @@ document.addEventListener('keydown', (event) => {
 
 const controlsContainer = document.getElementById('controls');
 const instruction = document.createElement('p');
+
 instruction.textContent = 'Press the keys when the elements touch the character!';
 controlsContainer.appendChild(instruction);
 
