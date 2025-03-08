@@ -9,6 +9,12 @@
 const gameContainer = document.getElementById('game-container');
 const elements = [];
 const hitboxRange = 50;
+const music = new Audio('/src/audio/background.mp3');
+
+const sounds = {
+    hit: new Audio('/src/audio/BloodSound.mp3'),
+    miss: new Audio('/src/audio/Sword.mp3'),
+};
 
 const columnLogos = [
     "/src/img/Chaos.png",
@@ -25,7 +31,22 @@ let intervalTime = 500;
 let keyPressed = false;
 let missCount = 0;
 
+
+
 // ------ FUNCTIONS ------ //
+
+function playSound(sound) {
+    if (sounds[sound]) {
+        sounds[sound].currentTime = 0;
+        if (sound === 'hit') {
+            sounds[sound].volume = 0.3;
+        }
+        if (sound === 'miss') {
+            sounds[sound].volume = 0.1;
+        }
+        sounds[sound].play();
+    }
+}
 
 function createRandomElement() {
     const createElement = () => {
@@ -175,8 +196,10 @@ document.addEventListener('keydown', (event) => {
                 alert('You lost! Restarting the game.');
                 location.reload();
             }
+            playSound('miss');
         } else {
             missCount = 0;
+            playSound('hit');
         }
     }
 });
