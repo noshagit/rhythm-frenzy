@@ -219,7 +219,7 @@ function moveElements() {
             playBorders();
             if (consecutiveMisses >= 5) {
                 localStorage.setItem("currentScore", score);
-                window.location.replace("game-over.html");
+                window.location.replace("gameOver.html");
             }
         }
         setTimeout(() => {
@@ -327,7 +327,7 @@ document.addEventListener('keydown', (event) => {
             }
             if (missCount >= 5) {        
                 localStorage.setItem("currentScore", score);
-                window.location.replace("game-over.html")
+                window.location.replace("gameOver.html")
             }
             playSound('miss');
         } else {
