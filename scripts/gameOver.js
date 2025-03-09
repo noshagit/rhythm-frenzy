@@ -59,6 +59,13 @@ function displayBestScore() {
     bestScoreDisplay.textContent = `Meilleur score : ${bestScore} par ${bestPlayer}`;
 }
 
+function updateFavicon() {
+    const favicon = document.getElementById("favicon");
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    favicon.href = isDarkMode ? "/src/img/WhiteLogo.png" : "/src/img/BlackLogo.png";
+}
+
 let currentScore = localStorage.getItem("currentScore") || 0;
 
 displayBestScore();
