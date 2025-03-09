@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Over</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
-    <div class="game-over-container">
+    <div id="game-over-container" class="game-over-container" style="display: none;">
         <p>Game Over</p>
-        <button onclick="restartGame()">Retour au menu</button>
-        <audio id="gameOverSound" src="game-over.mp3"></audio>
+        <button id="restartButton">Retour au menu</button>
+        <audio id="gameOverSound" src="/src/audio/GameOver.mp3"></audio>
     </div>
 
-    <div id="score-display"></div>
+    <div id="score-display">Score : 0</div>
     <div id="blood-splash"></div>
-    <div id="best_score"></div>
-    <script src="script.js"></script>
+    <div id="best-score-display">Meilleur score : 0</div>
+
+    <script src="/scripts/game-over.js"></script>
 </body>
 </html>

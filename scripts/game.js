@@ -218,8 +218,8 @@ function moveElements() {
             consecutiveMisses++;
             playBorders();
             if (consecutiveMisses >= 5) {
-                alert('You lost! Restarting the game.');
-                location.reload();
+                localStorage.setItem("currentScore", score);
+                window.location.replace("game-over.html");
             }
         }
         setTimeout(() => {
@@ -325,9 +325,9 @@ document.addEventListener('keydown', (event) => {
                 closestElement.parentElement.removeChild(closestElement);
                 elements.splice(elements.indexOf(closestElement), 1);
             }
-            if (missCount >= 5) {
-                alert('You lost! Restarting the game.');
-                location.reload();
+            if (missCount >= 5) {        
+                localStorage.setItem("currentScore", score);
+                window.location.replace("game-over.html")
             }
             playSound('miss');
         } else {
