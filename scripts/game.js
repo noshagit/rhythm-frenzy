@@ -159,7 +159,7 @@ function createRandomElement() {
 
         const element = document.createElement('div');
         element.classList.add('element');
-        element.style.left = `35%`;
+        element.style.left = `28%`;
         element.style.top = `${rowIndex * 25 - totalRows * 20}px`;
         element.style.visibility = isVisible ? 'visible' : 'hidden';
         switch (colIndex) {
